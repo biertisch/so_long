@@ -96,4 +96,6 @@ void	validate_map(t_data *data)
 	init_map_data(data);
 	if (!is_reachable(data))
 		error_exit(data, "Error: Invalid map (unreachable exit/collectible)\n");
+	if (data->map_size.row * data->tile_size > 1920 || data->map_size.col * data->tile_size > 1080)
+		error_exit(data, "Error: Invalid map (too big)\n");
 }

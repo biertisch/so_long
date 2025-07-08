@@ -15,7 +15,7 @@
 void	error_exit(t_data *data, char *error_msg)
 {
 	if (data)
-		//free_data(data);
+		free_data(data);
 	if (error_msg)
 		ft_putstr_fd(error_msg, 2);
 	exit(1);
@@ -29,12 +29,9 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		error_exit(&data, "Usage: ./so_long <map>\n");
 	parse_map(&data, argv[1]);
-
-/* 	init_mlx_data(&data);
+	init_mlx_data(&data);
 	render_map(&data);
-
-	mlx_key_hook(data.win, handle_input, &data);
+	mlx_hook(data.win, 2, 1L << 0, key_handler, &data); 
 	mlx_hook(data.win, 17, 0, close_game, &data);
 	mlx_loop(data.mlx);
-	return (0); */
 }

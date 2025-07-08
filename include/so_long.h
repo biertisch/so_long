@@ -26,7 +26,7 @@ typedef struct	s_found
 typedef struct	s_point
 {
 	int	row;
-	int	column;
+	int	col;
 }	t_point;
 
 typedef struct	s_data
@@ -40,20 +40,25 @@ typedef struct	s_data
 	t_point	player_pos;
 	int		collectibles;
 	t_found	found;
-	int		move;
+	int		moves;
 	void	*img_floor;
 	void	*img_wall;
 	void	*img_player;
-	void	*img_exit;
 	void	*img_collectible;
+	void	*img_exit;
 }			t_data;
-
 
 void	error_exit(t_data *data, char *error_msg);
 void	parse_map(t_data *data, char *file);
 void	validate_map(t_data *data);
 int		is_reachable(t_data *data);
 void	init_map_data(t_data *data);
+void	init_mlx_data(t_data *data);
+void	render_map(t_data *data);
+int 	key_handler(int keycode, void *param);
+void	move(t_data *data, int new_row, int new_col);
 void	free_arr(char **arr);
+void	free_data(t_data *data);
+int		close_game(void *param);
 
 #endif

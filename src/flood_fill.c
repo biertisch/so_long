@@ -15,19 +15,19 @@
 static void	flood_fill(char **map, t_point size, t_point start, t_found *found)
 {
 	if (start.row < 0 || start.row >= size.row
-		|| start.column < 0 || start.column >= size.column
-		|| map[start.row][start.column] == '1'
-		|| map[start.row][start.column] == 'F')
+		|| start.col < 0 || start.col >= size.col
+		|| map[start.row][start.col] == '1'
+		|| map[start.row][start.col] == 'F')
 		return ;
-	if (map[start.row][start.column] == 'E')
+	if (map[start.row][start.col] == 'E')
 		found->exit++;
-	if (map[start.row][start.column] == 'C')
+	if (map[start.row][start.col] == 'C')
 		found->collectibles++;
-	map[start.row][start.column] = 'F';
-	flood_fill(map, size, (t_point){start.row, start.column + 1}, found);
-	flood_fill(map, size, (t_point){start.row, start.column - 1}, found);
-	flood_fill(map, size, (t_point){start.row - 1, start.column}, found);
-	flood_fill(map, size, (t_point){start.row + 1, start.column}, found);
+	map[start.row][start.col] = 'F';
+	flood_fill(map, size, (t_point){start.row, start.col + 1}, found);
+	flood_fill(map, size, (t_point){start.row, start.col - 1}, found);
+	flood_fill(map, size, (t_point){start.row - 1, start.col}, found);
+	flood_fill(map, size, (t_point){start.row + 1, start.col}, found);
 }
 
 static char	**duplicate_map(char **map, int rows)
@@ -63,5 +63,7 @@ int	is_reachable(t_data *data)
 	free_arr(tmp);
 	if (data->found.exit != 1 || data->found.collectibles != data->collectibles)
 		return (0);
+	data->found.exit = 0;
+	data->found.collectibles = 0;
 	return (1);
 }
