@@ -17,11 +17,31 @@
 # include "../libft/include/libft.h"
 # include <fcntl.h>
 
-# ifndef TILE_SIZE
-#  define TILE_SIZE 32
-# endif
+# define TILE_SIZE 32
+# define ESC 65307
+# define Q_KEY 113
+# define W_KEY 119
+# define A_KEY 97
+# define S_KEY 115
+# define D_KEY 100
+# define L_ARROW 65361
+# define R_ARROW 65363
+# define U_ARROW 65362
+# define D_ARROW 65364
+# define MAGIC_COLOR 0xFF00FF
 
-typedef struct	s_data
+typedef struct s_image
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+	int		width;
+	int		height;
+}			t_image;
+
+typedef struct s_data
 {
 	char	**map;
 	int		map_width;
@@ -36,11 +56,11 @@ typedef struct	s_data
 	int		collected;
 	int		unlock_exit;
 	int		moves;
-	void	*img_floor;
-	void	*img_wall;
-	void	*img_player;
-	void	*img_collect;
-	void	*img_exit;
+	t_image	floor;
+	t_image	wall;
+	t_image	player;
+	t_image	collect;
+	t_image	exit;
 }			t_data;
 
 //free.c
@@ -65,13 +85,17 @@ char	**duplicate_map(char **map, int rows);
 //map_data.c
 void	init_map_data(t_data *data);
 
-//display_data.c
+//mlx_data.c
 void	init_display_data(t_data *data);
+
+//transparency.c
+void	draw_with_transparency(t_image *dest, t_image *src);
 
 //render.c
 void	render_map(t_data *data);
+int		resize_handler(void *param);
 
-//moves.c
-int key_handler(int keycode, void *param);
+//move.c
+int		key_handler(int keycode, void *param);
 
 #endif

@@ -25,5 +25,6 @@ int	main(int argc, char **argv)
 	render_map(&data);
 	mlx_hook(data.win, 2, 1L << 0, key_handler, &data);
 	mlx_hook(data.win, 17, 0, close_game, &data);
+	mlx_hook(data.win, 22, 1L << 17, resize_handler, &data);
 	mlx_loop(data.mlx);
 }

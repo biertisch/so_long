@@ -32,11 +32,11 @@ static void	free_image(void *mlx, void *img)
 
 static void	free_images(t_data *data)
 {
-	free_image(data->mlx, data->img_floor);
-	free_image(data->mlx, data->img_wall);
-	free_image(data->mlx, data->img_player);
-	free_image(data->mlx, data->img_collect);
-	free_image(data->mlx, data->img_exit);
+	free_image(data->mlx, data->floor.img);
+	free_image(data->mlx, data->wall.img);
+	free_image(data->mlx, data->player.img);
+	free_image(data->mlx, data->collect.img);
+	free_image(data->mlx, data->exit.img);
 }
 
 void	free_data(t_data *data)

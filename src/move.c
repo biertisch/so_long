@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   moves.c                                            :+:      :+:    :+:   */
+/*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -21,16 +21,19 @@ static void	update_moves(t_data *data)
 static void	update_old_tile(t_data *data, int old_row, int old_col)
 {
 	if (data->map[old_row][old_col] == 'E')
-		mlx_put_image_to_window(data->mlx, data->win, data->img_exit,
+		mlx_put_image_to_window(data->mlx, data->win, data->exit.img,
 			data->player_col * TILE_SIZE,
 			data->player_row * TILE_SIZE);
 	else
-		mlx_put_image_to_window(data->mlx, data->win, data->img_floor,
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->floor.img,
 			data->player_col * TILE_SIZE,
 			data->player_row * TILE_SIZE);
+		data->map[old_row][old_col] = '0';
+	}
 }
 
-static void	update_collectibles(t_data *data, int new_row, int new_col)
+static void	collect(t_data *data, int new_row, int new_col)
 {
 	data->collected++;
 	if (data->collected == data->collectibles)
@@ -44,14 +47,15 @@ static void	move(t_data *data, int new_row, int new_col)
 		|| data->map[new_row][new_col] == '1')
 		return ;
 	else if (data->map[new_row][new_col] == 'C')
-		update_collectibles(data, new_row, new_col);
+		collect(data, new_row, new_col);
 	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 1)
 		victory(data);
 	update_old_tile(data, data->player_row, data->player_col);
-	mlx_put_image_to_window(data->mlx, data->win, data->img_player,
+	mlx_put_image_to_window(data->mlx, data->win, data->player.img,
 		new_col * TILE_SIZE, new_row * TILE_SIZE);
 	data->player_row = new_row;
 	data->player_col = new_col;
+	data->map[new_row][new_col] = 'P';
 	update_moves(data);
 }
 
@@ -60,15 +64,15 @@ int	key_handler(int keycode, void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
-	if (keycode == 65361 || keycode == 97)
+	if (keycode == L_ARROW || keycode == A_KEY)
 		move(data, data->player_row, data->player_col - 1);
-	else if (keycode == 65363 || keycode == 100)
+	else if (keycode == R_ARROW || keycode == D_KEY)
 		move(data, data->player_row, data->player_col + 1);
-	else if (keycode == 65362 || keycode == 119)
+	else if (keycode == U_ARROW || keycode == W_KEY)
 		move(data, data->player_row - 1, data->player_col);
-	else if (keycode == 65364 || keycode == 115)
+	else if (keycode == D_ARROW || keycode == S_KEY)
 		move(data, data->player_row + 1, data->player_col);
-	else if (keycode == 65307 || keycode == 113)
+	else if (keycode == ESC || keycode == Q_KEY)
 		close_game(param);
 	return (0);
 }
