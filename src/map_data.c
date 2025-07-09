@@ -31,7 +31,7 @@ static void	count_collectibles(char **map, int *collectibles)
 	}
 }
 
-static void	set_player_pos(char **map, t_point *position)
+static void	set_player_pos(char **map, int *row, int *col)
 {
 	int	i;
 	int	j;
@@ -44,8 +44,8 @@ static void	set_player_pos(char **map, t_point *position)
 		{
 			if (map[i][j] == 'P')
 			{
-				position->row = i;
-				position->col = j;
+				*row = i;
+				*col = j;
 			}
 			j++;
 		}
@@ -53,21 +53,20 @@ static void	set_player_pos(char **map, t_point *position)
 	}
 }
 
-static void	set_map_size(char **map, t_point *map_size)
+static void	set_map_size(char **map, int *width, int *height)
 {
 	int	i;
 
 	i = 0;
-	map_size->col = ft_strlen(map[i]);
-	map_size->row = 0;
+	*width = ft_strlen(map[i]);
+	*height = 0;
 	while (map[i++])
-		map_size->row++;
+		(*height)++;
 }
 
 void	init_map_data(t_data *data)
 {
-	set_map_size(data->map, &data->map_size);
-	set_player_pos(data->map, &data->player_pos);
+	set_map_size(data->map, &data->map_width, &data->map_height);
+	set_player_pos(data->map, &data->player_row, &data->player_col);
 	count_collectibles(data->map, &data->collectibles);
-	data->tile_size = 32;
 }

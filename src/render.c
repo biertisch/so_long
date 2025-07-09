@@ -12,28 +12,38 @@
 
 #include "../include/so_long.h"
 
+static void	draw_object(t_data *data, char c, int x, int y)
+{
+	if (c == '1')
+		mlx_put_image_to_window(data->mlx, data->win, data->img_wall, x, y);
+	else if (c == 'P')
+		mlx_put_image_to_window(data->mlx, data->win, data->img_player, x, y);
+	else if (c == 'C')
+		mlx_put_image_to_window(data->mlx, data->win, data->img_collect, x, y);
+	else if (c == 'E')
+		mlx_put_image_to_window(data->mlx, data->win, data->img_exit, x, y);
+}
+
 void	render_map(t_data *data)
 {
+	int	i;
+	int	j;
 	int	x;
 	int	y;
 
-	y = 0;
-	while (data->map[y])
+	i = 0;
+	while (data->map[i])
 	{
-		x = 0;
-		while (data->map[y][x])
+		j = 0;
+		while (data->map[i][j])
 		{
-			mlx_put_image_to_window(data->mlx, data->win, data->img_floor, x * data->tile_size, y * data->tile_size);
-			if (data->map[y][x] == '1')
-				mlx_put_image_to_window(data->mlx, data->win, data->img_wall, x * data->tile_size, y * data->tile_size);
-			if (data->map[y][x] == 'P')
-				mlx_put_image_to_window(data->mlx, data->win, data->img_player, x * data->tile_size, y * data->tile_size);
-			if (data->map[y][x] == 'C')
-				mlx_put_image_to_window(data->mlx, data->win, data->img_collectible, x * data->tile_size, y * data->tile_size);
-			if (data->map[y][x] == 'E')
-				mlx_put_image_to_window(data->mlx, data->win, data->img_exit, x * data->tile_size, y * data->tile_size);
-			x++;
+			x = j * TILE_SIZE;
+			y = i * TILE_SIZE;
+			mlx_put_image_to_window(data->mlx, data->win, data->img_floor, x,
+				y);
+			draw_object(data, data->map[i][j], x, y);
+			j++;
 		}
-		y++;
+		i++;
 	}
 }

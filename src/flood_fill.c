@@ -12,25 +12,23 @@
 
 #include "../include/so_long.h"
 
-static void	flood_fill(char **map, t_point size, t_point start, t_found *found)
+void	flood_fill(t_data *data, char **map, int row, int col)
 {
-	if (start.row < 0 || start.row >= size.row
-		|| start.col < 0 || start.col >= size.col
-		|| map[start.row][start.col] == '1'
-		|| map[start.row][start.col] == 'F')
+	if (row < 0 || row >= data->map_height || col < 0 || col >= data->map_width
+		|| map[row][col] == '1' || map[row][col] == 'F')
 		return ;
-	if (map[start.row][start.col] == 'E')
-		found->exit++;
-	if (map[start.row][start.col] == 'C')
-		found->collectibles++;
-	map[start.row][start.col] = 'F';
-	flood_fill(map, size, (t_point){start.row, start.col + 1}, found);
-	flood_fill(map, size, (t_point){start.row, start.col - 1}, found);
-	flood_fill(map, size, (t_point){start.row - 1, start.col}, found);
-	flood_fill(map, size, (t_point){start.row + 1, start.col}, found);
+	if (map[row][col] == 'E')
+		data->unlock_exit++;
+	if (map[row][col] == 'C')
+		data->collected++;
+	map[row][col] = 'F';
+	flood_fill(data, map, row, col + 1);
+	flood_fill(data, map, row, col - 1);
+	flood_fill(data, map, row - 1, col);
+	flood_fill(data, map, row + 1, col);
 }
 
-static char	**duplicate_map(char **map, int rows)
+char	**duplicate_map(char **map, int rows)
 {
 	char	**tmp;
 	int		i;
@@ -50,20 +48,4 @@ static char	**duplicate_map(char **map, int rows)
 		i++;
 	}
 	return (tmp);
-}
-
-int	is_reachable(t_data *data)
-{
-	char	**tmp;
-
-	tmp = duplicate_map(data->map, data->map_size.row);
-	if (!tmp)
-		error_exit(data, "Error: Memory allocation failed\n");
-	flood_fill(tmp, data->map_size, data->player_pos, &data->found);
-	free_arr(tmp);
-	if (data->found.exit != 1 || data->found.collectibles != data->collectibles)
-		return (0);
-	data->found.exit = 0;
-	data->found.collectibles = 0;
-	return (1);
 }

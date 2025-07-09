@@ -35,7 +35,7 @@ static void	free_images(t_data *data)
 	free_image(data->mlx, data->img_floor);
 	free_image(data->mlx, data->img_wall);
 	free_image(data->mlx, data->img_player);
-	free_image(data->mlx, data->img_collectible);
+	free_image(data->mlx, data->img_collect);
 	free_image(data->mlx, data->img_exit);
 }
 

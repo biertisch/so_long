@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/05 15:02:15 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/05 15:02:15 by beatde-a         ###   ########.fr       */
+/*   Created: 2025/07/09 11:10:30 by beatde-a          #+#    #+#             */
+/*   Updated: 2025/07/09 11:10:30 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	main(int argc, char **argv)
+void	victory(t_data *data)
 {
-	t_data	data;
+	ft_printf("You won the game. So long!\n");
+	close_game((void *)data);
+}
 
-	ft_bzero(&data, sizeof(t_data));
-	if (argc != 2)
-		error_exit(&data, "Usage: ./so_long <map>\n");
-	parse_map(&data, argv[1]);
-	validate_map(&data);
-	init_display_data(&data);
-	render_map(&data);
-	mlx_hook(data.win, 2, 1L << 0, key_handler, &data);
-	mlx_hook(data.win, 17, 0, close_game, &data);
-	mlx_loop(data.mlx);
+int	close_game(void *param)
+{
+	free_data((t_data *)param);
+	exit(0);
+	return (0);
+}
+
+void	error_exit(t_data *data, char *error_msg)
+{
+	if (data)
+		free_data(data);
+	if (error_msg)
+		ft_putstr_fd(error_msg, 2);
+	exit(1);
 }

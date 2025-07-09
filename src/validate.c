@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validate_map.c                                     :+:      :+:    :+:   */
+/*   validate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,6 +11,22 @@
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
+
+static int	is_reachable(t_data *data)
+{
+	char	**tmp;
+
+	tmp = duplicate_map(data->map, data->map_height);
+	if (!tmp)
+		error_exit(data, "Error: Memory allocation failed\n");
+	flood_fill(data, tmp, data->player_row, data->player_col);
+	free_arr(tmp);
+	if (data->unlock_exit != 1 || data->collected != data->collectibles)
+		return (0);
+	data->unlock_exit = 0;
+	data->collected = 0;
+	return (1);
+}
 
 static int	has_valid_elements(char **map)
 {
@@ -43,23 +59,22 @@ static int	has_valid_elements(char **map)
 static int	is_enclosed(char **map)
 {
 	int	i;
-	int j;
-	int	last_x;
-	int	last_y;
+	int	j;
+	int	last_col;
+	int	last_row;
 
-	i = 0;
-	last_x = ft_strlen(map[i]) - 1;
-	last_y = 0;
-	while (map[i++])
-		last_y++;
-	last_y--;
+	last_col = ft_strlen(map[0]) - 1;
+	last_row = 0;
+	while (map[last_row])
+		last_row++;
+	last_row--;
 	i = 0;
 	while (map[i])
 	{
 		j = 0;
 		while (map[i][j])
 		{
-			if ((i == 0 || j == 0 || i == last_y || j == last_x)
+			if ((i == 0 || j == 0 || i == last_row || j == last_col)
 				&& map[i][j] != '1')
 				return (0);
 			j++;
@@ -96,6 +111,7 @@ void	validate_map(t_data *data)
 	init_map_data(data);
 	if (!is_reachable(data))
 		error_exit(data, "Error: Invalid map (unreachable exit/collectible)\n");
-	if (data->map_size.row * data->tile_size > 1920 || data->map_size.col * data->tile_size > 1080)
+	if (data->map_width * TILE_SIZE > 1920
+		|| data->map_height * TILE_SIZE > 1080)
 		error_exit(data, "Error: Invalid map (too big)\n");
 }

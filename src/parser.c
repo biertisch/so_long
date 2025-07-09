@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_map.c                                        :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -23,7 +23,8 @@ static char	**append_line(char **map, char *line, int i)
 	j = 0;
 	while (j < i)
 	{
-		new_map[j] = map[j];
+		if (map)
+			new_map[j] = map[j];
 		j++;
 	}
 	new_map[i] = ft_strtrim(line, "\r\n");
@@ -59,5 +60,4 @@ void	parse_map(t_data *data, char *file)
 		i++;
 	}
 	close(fd);
-	validate_map(data);
 }
