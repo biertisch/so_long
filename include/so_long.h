@@ -46,9 +46,9 @@ typedef struct s_image
 
 typedef struct s_env_anim
 {
-	t_image *frames;
+	t_image	*frames;
 	int		frame_count;
-	int 	current_frame;
+	int		current_frame;
 	int		frame_tick;
 	int		tick_rate;
 }			t_env_anim;
@@ -90,7 +90,7 @@ typedef struct s_data
 void	free_data(t_data *data);
 void	free_arr(char **arr);
 
-//exit.c
+//end.c
 void	error_exit(t_data *data, char *error_msg);
 int		close_game(void *param);
 void	victory(t_data *data);

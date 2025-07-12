@@ -20,12 +20,14 @@ static void	update_moves(t_data *data)
 
 static void	update_player_frame(t_data *data, int dir)
 {
+	int	frame;
+
 	if (data->player.current_dir != dir)
-		data->player.current_frame = 0;
+		frame = 0;
 	else
-		data->player.current_frame =
-			(data->player.current_frame + 1) % PLAYER_FRAMES;
+		frame = (data->player.current_frame + 1) % PLAYER_FRAMES;
 	data->player.current_dir = dir;
+	data->player.current_frame = frame;
 }
 
 static void	collect(t_data *data, int new_row, int new_col)

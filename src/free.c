@@ -28,7 +28,7 @@ static void	free_ent_frames(t_data *data, t_ent_anim *entity)
 {
 	int	i;
 	int	j;
-	
+
 	if (entity->on_exit_frame.img)
 		mlx_destroy_image(data->mlx, entity->on_exit_frame.img);
 	if (!entity->frames)
@@ -52,7 +52,7 @@ static void	free_ent_frames(t_data *data, t_ent_anim *entity)
 static void	free_env_frames(t_data *data, t_env_anim *obj)
 {
 	int	i;
-	
+
 	if (!obj->frames)
 		return ;
 	i = 0;

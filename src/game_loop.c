@@ -17,8 +17,7 @@ static void	animate_object(t_env_anim *obj)
 	obj->frame_tick++;
 	if (obj->frame_tick >= obj->tick_rate)
 	{
-		obj->current_frame =
-			(obj->current_frame + 1) % obj->frame_count;
+		obj->current_frame = (obj->current_frame + 1) % obj->frame_count;
 		obj->frame_tick = 0;
 	}
 }

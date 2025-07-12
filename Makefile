@@ -11,7 +11,7 @@ SRC = $(addprefix $(SRC_DIR),\
 		data.c\
 		draw.c\
 		game_loop.c\
-		exit.c\
+		end.c\
 		filename.c\
 		flood_fill.c\
 		free.c\

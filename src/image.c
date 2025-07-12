@@ -28,7 +28,7 @@ void	load_wall_frames(t_data *data)
 		i++;
 	}
 	data->wall.frame_count = WALL_FRAMES;
-	data->wall.tick_rate = 150;
+	data->wall.tick_rate = 100;
 }
 
 void	load_exit_frames(t_data *data)
@@ -87,10 +87,8 @@ void	load_image(t_data *data, t_image *dest, int layers, char *filename)
 	if (layers >= 1)
 		draw_with_transparency(dest, &data->floor);
 	if (layers == 2)
-		draw_with_transparency(
-			dest, 
-			&data->exit.frames[data->exit.current_frame]
-		);
+		draw_with_transparency(dest,
+			&data->exit.frames[data->exit.current_frame]);
 	draw_with_transparency(dest, &src);
 	mlx_destroy_image(data->mlx, src.img);
 }

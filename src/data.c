@@ -20,10 +20,10 @@ void	init_mlx_data(t_data *data)
 	data->win_width = data->map_width * TILE_SIZE;
 	data->win_height = data->map_height * TILE_SIZE;
 	data->win = mlx_new_window(
-		data->mlx,
-		data->win_width,
-		data->win_height,
-		"So Long");
+			data->mlx,
+			data->win_width,
+			data->win_height,
+			"So Long");
 	if (!data->win)
 		error_exit(data, "Error: Failed to create window\n");
 	load_image(data, &data->floor, 0, "textures/floor.xpm");

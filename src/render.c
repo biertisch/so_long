@@ -26,12 +26,12 @@ static void	render_player(t_data *data, char c, int x, int y)
 			mlx_destroy_image(data->mlx, data->player.on_exit_frame.img);
 		build_ent_filename(path, "player", dir, frame);
 		load_image(data, &data->player.on_exit_frame, 2, path);
-		mlx_put_image_to_window(data->mlx, data->win, 
+		mlx_put_image_to_window(data->mlx, data->win,
 			data->player.on_exit_frame.img, x, y);
 	}
 	else
 		mlx_put_image_to_window(data->mlx, data->win,
-			data->player.frames[dir][frame].img, x, y);			
+			data->player.frames[dir][frame].img, x, y);
 }
 
 static void	render_environment(t_data *data, char c, int x, int y)

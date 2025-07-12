@@ -23,7 +23,7 @@ void	build_env_filename(char *dest, char *base, int frame)
 	i = 0;
 	while (*prefix)
 		dest[i++] = *prefix++;
-	while(*base)
+	while (*base)
 		dest[i++] = *base++;
 	dest[i++] = '_';
 	if (frame >= 10)
@@ -46,7 +46,7 @@ void	build_ent_filename(char *dest, char *base, int dir, int frame)
 	i = 0;
 	while (*prefix)
 		dest[i++] = *prefix++;
-	while(*base)
+	while (*base)
 		dest[i++] = *base++;
 	dest[i++] = '_';
 	dest[i++] = '0' + dir;
