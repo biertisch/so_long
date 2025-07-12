@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   game_loop.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/05 15:02:15 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/05 15:02:15 by beatde-a         ###   ########.fr       */
+/*   Created: 2025/07/11 12:31:54 by beatde-a          #+#    #+#             */
+/*   Updated: 2025/07/11 12:31:54 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-int	main(int argc, char **argv)
+static void	animate_object(t_env_anim *obj)
 {
-	t_data	data;
+	obj->frame_tick++;
+	if (obj->frame_tick >= obj->tick_rate)
+	{
+		obj->current_frame =
+			(obj->current_frame + 1) % obj->frame_count;
+		obj->frame_tick = 0;
+	}
+}
 
-	ft_bzero(&data, sizeof(t_data));
-	if (argc != 2)
-		error_exit(&data, "Usage: ./so_long <map>\n");
-	parse_map(&data, argv[1]);
-	validate_map(&data);
-	init_mlx_data(&data);
-	render_map(&data);
-	mlx_hook(data.win, 2, 1L << 0, key_handler, &data);
-	mlx_hook(data.win, 17, 0, close_game, &data);
-	mlx_loop_hook(data.mlx, &game_loop, &data);
-	mlx_loop(data.mlx);
+int	game_loop(t_data *data)
+{
+	animate_object(&data->exit);
+	animate_object(&data->wall);
+	render_map(data);
+	return (0);
 }

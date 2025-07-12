@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   move.c                                             :+:      :+:    :+:   */
+/*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,19 +18,14 @@ static void	update_moves(t_data *data)
 	ft_printf("Moves: %d\n", data->moves);
 }
 
-static void	update_old_tile(t_data *data, int old_row, int old_col)
+static void	update_player_frame(t_data *data, int dir)
 {
-	if (data->map[old_row][old_col] == 'E')
-		mlx_put_image_to_window(data->mlx, data->win, data->exit.img,
-			data->player_col * TILE_SIZE,
-			data->player_row * TILE_SIZE);
+	if (data->player.current_dir != dir)
+		data->player.current_frame = 0;
 	else
-	{
-		mlx_put_image_to_window(data->mlx, data->win, data->floor.img,
-			data->player_col * TILE_SIZE,
-			data->player_row * TILE_SIZE);
-		data->map[old_row][old_col] = '0';
-	}
+		data->player.current_frame =
+			(data->player.current_frame + 1) % PLAYER_FRAMES;
+	data->player.current_dir = dir;
 }
 
 static void	collect(t_data *data, int new_row, int new_col)
@@ -41,21 +36,20 @@ static void	collect(t_data *data, int new_row, int new_col)
 	data->map[new_row][new_col] = '0';
 }
 
-static void	move(t_data *data, int new_row, int new_col)
+static void	move(t_data *data, int new_row, int new_col, int dir)
 {
 	if (new_row >= data->map_height || new_col >= data->map_width
 		|| data->map[new_row][new_col] == '1')
 		return ;
 	else if (data->map[new_row][new_col] == 'C')
 		collect(data, new_row, new_col);
+	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 0)
+		ft_printf("Are you sure you collected everything?\n");
 	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 1)
 		victory(data);
-	update_old_tile(data, data->player_row, data->player_col);
-	mlx_put_image_to_window(data->mlx, data->win, data->player.img,
-		new_col * TILE_SIZE, new_row * TILE_SIZE);
+	update_player_frame(data, dir);
 	data->player_row = new_row;
 	data->player_col = new_col;
-	data->map[new_row][new_col] = 'P';
 	update_moves(data);
 }
 
@@ -64,14 +58,14 @@ int	key_handler(int keycode, void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
-	if (keycode == L_ARROW || keycode == A_KEY)
-		move(data, data->player_row, data->player_col - 1);
-	else if (keycode == R_ARROW || keycode == D_KEY)
-		move(data, data->player_row, data->player_col + 1);
-	else if (keycode == U_ARROW || keycode == W_KEY)
-		move(data, data->player_row - 1, data->player_col);
+	if (keycode == U_ARROW || keycode == W_KEY)
+		move(data, data->player_row - 1, data->player_col, 0);
 	else if (keycode == D_ARROW || keycode == S_KEY)
-		move(data, data->player_row + 1, data->player_col);
+		move(data, data->player_row + 1, data->player_col, 1);
+	else if (keycode == L_ARROW || keycode == A_KEY)
+		move(data, data->player_row, data->player_col - 1, 2);
+	else if (keycode == R_ARROW || keycode == D_KEY)
+		move(data, data->player_row, data->player_col + 1, 3);
 	else if (keycode == ESC || keycode == Q_KEY)
 		close_game(param);
 	return (0);

@@ -8,8 +8,19 @@ MLX = $(MLX_DIR)libmlx.a
 
 SRC_DIR = src/
 SRC = $(addprefix $(SRC_DIR),\
-		main.c free.c exit.c parser.c validate.c flood_fill.c\
-		map_data.c mlx_data.c transparency.c render.c move.c)
+		data.c\
+		draw.c\
+		game_loop.c\
+		exit.c\
+		filename.c\
+		flood_fill.c\
+		free.c\
+		image.c\
+		main.c\
+		parser.c\
+		player.c\
+		render.c\
+		validate.c)
 
 OBJ_DIR = obj/
 OBJ = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))

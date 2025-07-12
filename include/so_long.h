@@ -17,18 +17,21 @@
 # include "../libft/include/libft.h"
 # include <fcntl.h>
 
-# define TILE_SIZE 32
+# define TILE_SIZE 64
 # define ESC 65307
 # define Q_KEY 113
 # define W_KEY 119
-# define A_KEY 97
 # define S_KEY 115
+# define A_KEY 97
 # define D_KEY 100
-# define L_ARROW 65361
-# define R_ARROW 65363
 # define U_ARROW 65362
 # define D_ARROW 65364
+# define L_ARROW 65361
+# define R_ARROW 65363
 # define MAGIC_COLOR 0xFF00FF
+# define EXIT_FRAMES 24
+# define WALL_FRAMES 22
+# define PLAYER_FRAMES 9
 
 typedef struct s_image
 {
@@ -41,27 +44,47 @@ typedef struct s_image
 	int		height;
 }			t_image;
 
+typedef struct s_env_anim
+{
+	t_image *frames;
+	int		frame_count;
+	int 	current_frame;
+	int		frame_tick;
+	int		tick_rate;
+}			t_env_anim;
+
+typedef struct s_ent_anim
+{
+	t_image	**frames;
+	t_image	on_exit_frame;
+	int		frame_count;
+	int		current_frame;
+	int		current_dir;
+	int		frame_tick;
+	int		frame_rate;
+}			t_ent_anim;
+
 typedef struct s_data
 {
-	char	**map;
-	int		map_width;
-	int		map_height;
-	void	*mlx;
-	void	*win;
-	int		win_width;
-	int		win_height;
-	int		player_row;
-	int		player_col;
-	int		collectibles;
-	int		collected;
-	int		unlock_exit;
-	int		moves;
-	t_image	floor;
-	t_image	wall;
-	t_image	player;
-	t_image	collect;
-	t_image	exit;
-}			t_data;
+	char		**map;
+	int			map_width;
+	int			map_height;
+	void		*mlx;
+	void		*win;
+	int			win_width;
+	int			win_height;
+	int			player_row;
+	int			player_col;
+	int			collectibles;
+	int			collected;
+	int			unlock_exit;
+	int			moves;
+	t_ent_anim	player;
+	t_env_anim	exit;
+	t_env_anim	wall;
+	t_image		floor;
+	t_image		collect;
+}				t_data;
 
 //free.c
 void	free_data(t_data *data);
@@ -82,20 +105,32 @@ void	validate_map(t_data *data);
 void	flood_fill(t_data *data, char **map, int row, int col);
 char	**duplicate_map(char **map, int rows);
 
-//map_data.c
+//data.c
 void	init_map_data(t_data *data);
+void	init_mlx_data(t_data *data);
 
-//mlx_data.c
-void	init_display_data(t_data *data);
+//image.c
+void	load_image(t_data *data, t_image *dest, int layers, char *filename);
+void	load_exit_frames(t_data *data);
+void	load_wall_frames(t_data *data);
+void	load_player_frames(t_data *data);
 
-//transparency.c
+//filename.c
+void	build_ent_filename(char *dest, char *base, int dir, int frame);
+void	build_env_filename(char *dest, char *base, int frame);
+
+//draw.c
 void	draw_with_transparency(t_image *dest, t_image *src);
+t_image	process_raw_image(t_data *data, char *filename);
+void	create_image_buffer(t_data *data, t_image *dest);
 
 //render.c
 void	render_map(t_data *data);
-int		resize_handler(void *param);
 
-//move.c
+//game_loop.c
+int		game_loop(t_data *data);
+
+//player.c
 int		key_handler(int keycode, void *param);
 
 #endif
