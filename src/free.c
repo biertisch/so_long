@@ -24,45 +24,35 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-static void	free_ent_frames(t_data *data, t_ent_anim *entity)
+static void	free_frames(t_data *data, t_image *frames, int frame_count)
 {
 	int	i;
-	int	j;
 
-	if (entity->on_exit_frame.img)
-		mlx_destroy_image(data->mlx, entity->on_exit_frame.img);
-	if (!entity->frames)
+	if (!frames)
+		return ;
+	i = 0;
+	while (i < frame_count)
+	{
+		if (frames[i].img)
+			mlx_destroy_image(data->mlx, frames[i].img);
+		i++;
+	}
+	free(frames);
+}
+
+static void	free_2d_frames(t_data *data, t_image **frames, int frame_count)
+{
+	int	i;
+
+	if (!frames)
 		return ;
 	i = 0;
 	while (i < 4)
 	{
-		j = 0;
-		while (j < entity->frame_count)
-		{
-			if (entity->frames[i][j].img)
-				mlx_destroy_image(data->mlx, entity->frames[i][j].img);
-			j++;
-		}
-		free(entity->frames[i]);
+		free_frames(data, frames[i], frame_count);
 		i++;
 	}
-	free(entity->frames);
-}
-
-static void	free_env_frames(t_data *data, t_env_anim *obj)
-{
-	int	i;
-
-	if (!obj->frames)
-		return ;
-	i = 0;
-	while (i < obj->frame_count)
-	{
-		if (obj->frames[i].img)
-			mlx_destroy_image(data->mlx, obj->frames[i].img);
-		i++;
-	}
-	free(obj->frames);
+	free(frames);
 }
 
 static void	free_images(t_data *data)
@@ -71,9 +61,25 @@ static void	free_images(t_data *data)
 		mlx_destroy_image(data->mlx, data->floor.img);
 	if (data->collect.img)
 		mlx_destroy_image(data->mlx, data->collect.img);
-	free_env_frames(data, &data->wall);
-	free_env_frames(data, &data->exit);
-	free_ent_frames(data, &data->player);
+	if (data->exit.img)
+		mlx_destroy_image(data->mlx, data->exit.img);
+	if (data->text_background.img)
+		mlx_destroy_image(data->mlx, data->text_background.img);
+	if (data->text_moves.img)
+		mlx_destroy_image(data->mlx, data->text_moves.img);
+	if (data->text_closed_exit.img)
+		mlx_destroy_image(data->mlx, data->text_closed_exit.img);
+	if (data->text_victory.img)
+		mlx_destroy_image(data->mlx, data->text_victory.img);
+	if (data->text_defeat.img)
+		mlx_destroy_image(data->mlx, data->text_defeat.img);		
+	free_frames(data, data->wall.frames, data->wall.frame_count);
+	free_frames(data, data->chars, 10);
+	free_2d_frames(data, data->player.frames, data->player.frame_count);
+	free_2d_frames(data, data->player.exit_layer, data->player.frame_count);
+	free_2d_frames(data, data->enemy.frames, data->enemy.frame_count);
+	free_2d_frames(data, data->enemy.collect_layer, data->enemy.frame_count);
+	free_2d_frames(data, data->enemy.exit_layer, data->enemy.frame_count);
 }
 
 void	free_data(t_data *data)

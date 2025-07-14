@@ -24,71 +24,72 @@ void	load_wall_frames(t_data *data)
 	while (i < WALL_FRAMES)
 	{
 		build_env_filename(path, "wall", i);
-		load_image(data, &data->wall.frames[i], 1, path);
+		load_image(data, &data->wall.frames[i], NULL, path);
 		i++;
 	}
 	data->wall.frame_count = WALL_FRAMES;
 	data->wall.tick_rate = 100;
 }
 
-void	load_exit_frames(t_data *data)
-{
-	char	path[64];
-	int		i;
-
-	data->exit.frames = malloc(sizeof(t_image) * EXIT_FRAMES);
-	if (!data->exit.frames)
-		error_exit(data, "Error: Memory allocation failed\n");
-	i = 0;
-	while (i < EXIT_FRAMES)
-	{
-		build_env_filename(path, "exit", i);
-		load_image(data, &data->exit.frames[i], 1, path);
-		i++;
-	}
-	data->exit.frame_count = EXIT_FRAMES;
-	data->exit.tick_rate = 50;
-}
-
-void	load_player_frames(t_data *data)
+static void	load_ent_frames(t_data *data, t_ent_anim *ent, char *ent_name, int extra_layer)
 {
 	char	path[64];
 	int		dir;
 	int		frame;
 
-	data->player.frames = malloc(sizeof(t_image *) * 4);
-	if (!data->player.frames)
-		error_exit(data, "Error: Memory allocation failed\n");
 	dir = 0;
 	while (dir < 4)
 	{
-		data->player.frames[dir] = malloc(sizeof(t_image) * PLAYER_FRAMES);
-		if (!data->player.frames[dir])
-			error_exit(data, "Error: Memory allocation failed\n");
 		frame = 0;
-		while (frame < PLAYER_FRAMES)
+		while (frame < ent->frame_count)
 		{
-			build_ent_filename(path, "player", dir, frame);
-			load_image(data, &data->player.frames[dir][frame], 1, path);
+			build_ent_filename(path, ent_name, dir, frame);
+			load_image(data, &ent->frames[dir][frame], NULL, path);
+			load_image(data, &ent->exit_layer[dir][frame], &data->exit, path);
+			if (extra_layer)
+				load_image(data, &ent->collect_layer[dir][frame], &data->collect, path);
 			frame++;
 		}
 		dir++;
 	}
-	data->player.frame_count = PLAYER_FRAMES;
-	data->player.current_dir = 1;
 }
 
-void	load_image(t_data *data, t_image *dest, int layers, char *filename)
+static void	allocate_ent_frames(t_data *data, t_ent_anim *ent, int extra_layer)
 {
-	t_image	src;
+	int		dir;
 
-	src = process_raw_image(data, filename);
-	create_image_buffer(data, dest);
-	if (layers >= 1)
-		draw_with_transparency(dest, &data->floor);
-	if (layers == 2)
-		draw_with_transparency(dest,
-			&data->exit.frames[data->exit.current_frame]);
-	draw_with_transparency(dest, &src);
-	mlx_destroy_image(data->mlx, src.img);
+	ent->frames = malloc(sizeof(t_image *) * 4);
+	ent->exit_layer = malloc(sizeof(t_image *) * 4);
+	if (extra_layer)
+		ent->collect_layer = malloc(sizeof(t_image *) * 4);
+	if (!ent->frames || !ent->exit_layer || (extra_layer && !ent->collect_layer))
+		error_exit(data, "Error: Memory allocation failed\n");
+	dir = 0;
+	while (dir < 4)
+	{
+		ent->frames[dir] = malloc(sizeof(t_image) * ent->frame_count);
+		ent->exit_layer[dir] = malloc(sizeof(t_image) * ent->frame_count);
+		if (extra_layer)
+			ent->collect_layer[dir] = malloc(sizeof(t_image) * ent->frame_count);
+		if (!ent->frames[dir] || !ent->exit_layer[dir] || (extra_layer && !ent->collect_layer[dir]))
+			error_exit(data, "Error: Memory allocation failed\n");
+		dir++;
+	}
+}
+
+void	load_enemy_frames(t_data *data)
+{
+	data->enemy.frame_count = ENEMY_FRAMES;
+	data->enemy.current_dir = 2;
+	data->enemy.tick_rate = 200;
+	allocate_ent_frames(data, &data->enemy, 1);
+	load_ent_frames(data, &data->enemy, "enemy", 1);
+}
+
+void	load_player_frames(t_data *data)
+{
+	data->player.frame_count = PLAYER_FRAMES;
+	data->player.current_dir = 1;
+	allocate_ent_frames(data, &data->player, 0);
+	load_ent_frames(data, &data->player, "player", 0);
 }

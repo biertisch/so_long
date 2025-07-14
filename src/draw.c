@@ -54,39 +54,3 @@ void	draw_with_transparency(t_image *dest, t_image *src)
 		row++;
 	}
 }
-
-void	create_image_buffer(t_data *data, t_image *dest)
-{
-	dest->img = mlx_new_image(data->mlx, TILE_SIZE, TILE_SIZE);
-	if (!dest->img)
-		error_exit(data, "Error: Failed to create image buffer\n");
-	dest->addr = mlx_get_data_addr(dest->img, &dest->bpp, &dest->line_len,
-			&dest->endian);
-	if (!dest->addr)
-		error_exit(data, "Error failed to access image buffer\n");
-	dest->width = TILE_SIZE;
-	dest->height = TILE_SIZE;
-}
-
-t_image	process_raw_image(t_data *data, char *filename)
-{
-	t_image	raw;
-
-	raw.img = mlx_xpm_file_to_image(data->mlx, filename, &raw.width,
-			&raw.height);
-	if (!raw.img)
-		error_exit(data, "Error: Failed to load image\n");
-	if (raw.width != TILE_SIZE || raw.height != TILE_SIZE)
-	{
-		mlx_destroy_image(data->mlx, raw.img);
-		error_exit(data, "Error: Tile size mismatch\n");
-	}
-	raw.addr = mlx_get_data_addr(raw.img, &raw.bpp, &raw.line_len,
-			&raw.endian);
-	if (!raw.addr)
-	{
-		mlx_destroy_image(data->mlx, raw.img);
-		error_exit(data, "Error: Failed to access image data\n");
-	}
-	return (raw);
-}

@@ -12,10 +12,21 @@
 
 #include "../include/so_long.h"
 
+void	defeat(t_data *data)
+{
+	data->game_over = 1;
+	mlx_put_image_to_window(data->mlx, data->win, data->text_defeat.img, data->win_width / 2 - 110, data->win_height - 32);
+	ft_printf("Total moves: %d\n", data->moves);
+	ft_printf("You lost the game. So long!\n");
+
+}
+
 void	victory(t_data *data)
 {
+	data->game_over = 1;
+	mlx_put_image_to_window(data->mlx, data->win, data->text_victory.img, data->win_width / 2 - 117, data->win_height - 32);
+	ft_printf("Total moves: %d\n", data->moves);
 	ft_printf("You won the game. So long!\n");
-	close_game((void *)data);
 }
 
 int	close_game(void *param)

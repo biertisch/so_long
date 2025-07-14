@@ -12,22 +12,16 @@
 
 #include "../include/so_long.h"
 
-static void	update_moves(t_data *data)
-{
-	data->moves++;
-	ft_printf("Moves: %d\n", data->moves);
-}
-
-static void	update_player_frame(t_data *data, int dir)
+void	update_frame(t_ent_anim *ent, int dir)
 {
 	int	frame;
 
-	if (data->player.current_dir != dir)
+	if (ent->current_dir != dir)
 		frame = 0;
 	else
-		frame = (data->player.current_frame + 1) % PLAYER_FRAMES;
-	data->player.current_dir = dir;
-	data->player.current_frame = frame;
+		frame = (ent->current_frame + 1) % ent->frame_count;
+	ent->current_dir = dir;
+	ent->current_frame = frame;
 }
 
 static void	collect(t_data *data, int new_row, int new_col)
@@ -40,19 +34,20 @@ static void	collect(t_data *data, int new_row, int new_col)
 
 static void	move(t_data *data, int new_row, int new_col, int dir)
 {
+	mlx_put_image_to_window(data->mlx, data->win, data->text_background.img, data->win_width / 2 - 161, data->win_height - 32);
 	if (new_row >= data->map_height || new_col >= data->map_width
 		|| data->map[new_row][new_col] == '1')
 		return ;
 	else if (data->map[new_row][new_col] == 'C')
 		collect(data, new_row, new_col);
 	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 0)
-		ft_printf("Are you sure you collected everything?\n");
-	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 1)
+		mlx_put_image_to_window(data->mlx, data->win, data->text_closed_exit.img, data->win_width / 2 - 161, data->win_height - 32);
+	else if (data->map[new_row][new_col] == 'E' && data->unlock_exit == 1 && !data->game_over)
 		victory(data);
-	update_player_frame(data, dir);
-	data->player_row = new_row;
-	data->player_col = new_col;
-	update_moves(data);
+	update_frame(&data->player, dir);
+	data->player.row = new_row;
+	data->player.col = new_col;
+	data->moves++;
 }
 
 int	key_handler(int keycode, void *param)
@@ -61,13 +56,13 @@ int	key_handler(int keycode, void *param)
 
 	data = (t_data *)param;
 	if (keycode == U_ARROW || keycode == W_KEY)
-		move(data, data->player_row - 1, data->player_col, 0);
+		move(data, data->player.row - 1, data->player.col, 0);
 	else if (keycode == D_ARROW || keycode == S_KEY)
-		move(data, data->player_row + 1, data->player_col, 1);
+		move(data, data->player.row + 1, data->player.col, 1);
 	else if (keycode == L_ARROW || keycode == A_KEY)
-		move(data, data->player_row, data->player_col - 1, 2);
+		move(data, data->player.row, data->player.col - 1, 2);
 	else if (keycode == R_ARROW || keycode == D_KEY)
-		move(data, data->player_row, data->player_col + 1, 3);
+		move(data, data->player.row, data->player.col + 1, 3);
 	else if (keycode == ESC || keycode == Q_KEY)
 		close_game(param);
 	return (0);

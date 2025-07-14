@@ -19,7 +19,7 @@ static int	is_reachable(t_data *data)
 	tmp = duplicate_map(data->map, data->map_height);
 	if (!tmp)
 		error_exit(data, "Error: Memory allocation failed\n");
-	flood_fill(data, tmp, data->player_row, data->player_col);
+	flood_fill(data, tmp, data->player.row, data->player.col);
 	free_arr(tmp);
 	if (data->unlock_exit != 1 || data->collected != data->collectibles)
 		return (0);
@@ -39,7 +39,7 @@ static int	has_valid_elements(char **map)
 		row = *map;
 		while (*row)
 		{
-			if (!ft_strchr("01PEC", *row))
+			if (!ft_strchr("01PECM", *row))
 				return (0);
 			if (*row == 'P')
 				elements[0]++;
@@ -112,6 +112,6 @@ void	validate_map(t_data *data)
 	if (!is_reachable(data))
 		error_exit(data, "Error: Invalid map (unreachable exit/collectible)\n");
 	if (data->map_width * TILE_SIZE > 1920
-		|| data->map_height * TILE_SIZE > 1080)
+		|| (data->map_height + 1) * TILE_SIZE > 1080)
 		error_exit(data, "Error: Invalid map (too big)\n");
 }

@@ -25,6 +25,6 @@ int	main(int argc, char **argv)
 	render_map(&data);
 	mlx_hook(data.win, 2, 1L << 0, key_handler, &data);
 	mlx_hook(data.win, 17, 0, close_game, &data);
-	mlx_loop_hook(data.mlx, &game_loop, &data);
+	mlx_loop_hook(data.mlx, game_loop, &data);
 	mlx_loop(data.mlx);
 }
