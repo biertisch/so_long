@@ -12,21 +12,19 @@
 
 #include "../include/so_long.h"
 
-void	defeat(t_data *data)
+void	handle_game_end(t_data *data)
 {
-	data->game_over = 1;
-	mlx_put_image_to_window(data->mlx, data->win, data->text_defeat.img, data->win_width / 2 - 110, data->win_height - 32);
-	ft_printf("Total moves: %d\n", data->moves);
-	ft_printf("You lost the game. So long!\n");
-
-}
-
-void	victory(t_data *data)
-{
-	data->game_over = 1;
-	mlx_put_image_to_window(data->mlx, data->win, data->text_victory.img, data->win_width / 2 - 117, data->win_height - 32);
-	ft_printf("Total moves: %d\n", data->moves);
-	ft_printf("You won the game. So long!\n");
+	if (data->end_tick == 0)
+		render_map(data);
+	if (data->game_over == 1 && data->end_tick == 0)
+		mlx_put_image_to_window(data->mlx, data->win, data->victory.img,
+			data->win_width / 2 - 190, data->win_height / 2 - 105);
+	else if (data->game_over == 2 && data->end_tick == 0)
+		mlx_put_image_to_window(data->mlx, data->win, data->defeat.img,
+			data->win_width / 2 - 190, data->win_height / 2 - 105);
+	data->end_tick++;
+	if (data->end_tick >= 25000)
+		close_game((void *)data);
 }
 
 int	close_game(void *param)

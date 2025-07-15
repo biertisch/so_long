@@ -24,14 +24,15 @@
 # define S_KEY 115
 # define A_KEY 97
 # define D_KEY 100
-# define U_ARROW 65362
-# define D_ARROW 65364
-# define L_ARROW 65361
-# define R_ARROW 65363
+# define UP_ARROW 65362
+# define DOWN_ARROW 65364
+# define LEFT_ARROW 65361
+# define RIGHT_ARROW 65363
 # define MAGIC_COLOR 0xFF00FF
 # define WALL_FRAMES 22
 # define PLAYER_FRAMES 9
 # define ENEMY_FRAMES 6
+# define CHAR_FRAMES 11
 
 typedef struct s_image
 {
@@ -80,41 +81,55 @@ typedef struct s_data
 	int			collected;
 	int			unlock_exit;
 	int			moves;
+	int			enemy_count;
+	int			game_over;
+	int			end_tick;
 	t_ent_anim	player;
-	t_ent_anim	enemy;
+	t_ent_anim	*enemy;
 	t_env_anim	wall;
 	t_image		exit;
 	t_image		floor;
 	t_image		collect;
-	t_image		text_background;
-	t_image		text_moves;
-	t_image		text_closed_exit;
-	t_image		text_victory;
-	t_image		text_defeat;
+	t_image		black;
+	t_image		move_counter;
+	t_image		collect_counter;
+	t_image		closed_exit;
+	t_image		victory;
+	t_image		defeat;
 	t_image		*chars;
-	int			game_over;
-	int			end_tick;
 }				t_data;
+
+//draw.c
+void	draw_with_transparency(t_image *dest, t_image *src);
+
+//end.c
+void	handle_game_end(t_data *data);
+void	error_exit(t_data *data, char *error_msg);
+int		close_game(void *param);
+
+//enemy.c
+int		move_enemy(t_data *data, t_ent_anim *enemy);
+
+//filename.c
+void	build_char_filename(char *dest, int idx);
+void	build_ent_filename(char *dest, char *base, int dir, int frame);
+void	build_env_filename(char *dest, char *base, int frame);
+
+//flood_fill.c
+void	flood_fill(t_data *data, char **map, int row, int col);
+char	**duplicate_map(char **map, int rows);
 
 //free.c
 void	free_data(t_data *data);
 void	free_arr(char **arr);
 
-//end.c
-void	error_exit(t_data *data, char *error_msg);
-int		close_game(void *param);
-void	victory(t_data *data);
-void	defeat(t_data *data);
+//game_loop.c
+int		game_loop(t_data *data);
 
-//parser.c
-void	parse_map(t_data *data, char *file);
-
-//validate.c
-void	validate_map(t_data *data);
-
-//flood_fill.c
-void	flood_fill(t_data *data, char **map, int row, int col);
-char	**duplicate_map(char **map, int rows);
+//image.c
+void	load_wall_frames(t_data *data);
+void	load_player_frames(t_data *data);
+void	load_enemy_frames(t_data *data);
 
 //map_data.c
 void	init_map_data(t_data *data);
@@ -123,33 +138,21 @@ void	init_map_data(t_data *data);
 void	init_mlx_data(t_data *data);
 void	load_image(t_data *data, t_image *dest, t_image *layer, char *filename);
 
-//image.c
-void	load_wall_frames(t_data *data);
-void	load_player_frames(t_data *data);
-void	load_enemy_frames(t_data *data);
-
-//text.c
-void	load_text(t_data *data);
-
-//filename.c
-void	build_char_filename(char *dest, int idx);
-void	build_ent_filename(char *dest, char *base, int dir, int frame);
-void	build_env_filename(char *dest, char *base, int frame);
-
-//draw.c
-void	draw_with_transparency(t_image *dest, t_image *src);
-
-//render.c
-void	render_map(t_data *data);
-
-//game_loop.c
-int		game_loop(t_data *data);
+//parser.c
+void	parse_map(t_data *data, char *file);
 
 //player.c
 int		key_handler(int keycode, void *param);
 void	update_frame(t_ent_anim *ent, int dir);
 
-//enemy.c
-int		move_enemy(t_data *data);
+//render.c
+void	render_map(t_data *data);
+int		render_counter(t_data *data, int n, int x);
+
+//text.c
+void	load_text(t_data *data);
+
+//validate.c
+void	validate_map(t_data *data);
 
 #endif

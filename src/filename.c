@@ -18,7 +18,7 @@ void	build_char_filename(char *dest, int idx)
 	const char	*suffix;
 	int			i;
 
-	prefix = "textures/text_";
+	prefix = "textures/text/char_";
 	suffix = ".xpm";
 	i = 0;
 	while (*prefix)

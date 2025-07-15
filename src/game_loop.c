@@ -12,46 +12,55 @@
 
 #include "../include/so_long.h"
 
-static void	display_moves(t_data *data)
+static void	display_collected(t_data *data)
 {
-	int	digits[10];
-	int	tmp;
-	int	len;
 	int	x;
 
-	x = 82;
-	mlx_put_image_to_window(data->mlx, data->win, data->text_moves.img, 10, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->text_background.img, x, 0);
-	tmp = data->moves;
-	len = 0;
-	if (tmp == 0)
-		digits[len++] = 0;
-	while (tmp > 0)
-	{
-		digits[len++] = tmp % 10;
-		tmp /= 10;
-	}
-	while (--len >= 0)
-	{
-		mlx_put_image_to_window(data->mlx, data->win, data->chars[digits[len]].img, x, 0);
-		x += 16;
-	}
+	mlx_put_image_to_window(data->mlx, data->win, data->collect_counter.img,
+		150, 0);
+	x = 182;
+	mlx_put_image_to_window(data->mlx, data->win, data->black.img,
+		x, 0);
+	x = render_counter(data, data->collected, x);
+	x += 16;
+	mlx_put_image_to_window(data->mlx, data->win, data->chars[10].img, x, 0);
+	x += 16;
+	x = render_counter(data, data->collectibles, x);
+}
+
+static void	display_moves(t_data *data)
+{
+	mlx_put_image_to_window(data->mlx, data->win, data->move_counter.img,
+		10, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->black.img,
+		82, 0);
+	render_counter(data, data->moves, 82);
 }
 
 static void	animate_enemy(t_data *data)
 {
 	int	new_dir;
-	
-	data->enemy.frame_tick++;
-	if (data->enemy.frame_tick >= data->enemy.tick_rate)
+	int	i;
+
+	i = 0;
+	while (i < data->enemy_count)
 	{
-		new_dir = move_enemy(data);
-		update_frame(&data->enemy, new_dir);
-		data->enemy.frame_tick = 0;
+		data->enemy[i].frame_tick++;
+		if (data->enemy[i].frame_tick >= data->enemy[i].tick_rate)
+		{
+			new_dir = move_enemy(data, &data->enemy[i]);
+			update_frame(&data->enemy[i], new_dir);
+			data->enemy[i].frame_tick = 0;
+		}
+		if (data->enemy[i].row == data->player.row
+			&& data->enemy[i].col == data->player.col && !data->game_over)
+		{
+			data->game_over = 2;
+			ft_printf("Total moves: %d\n", data->moves);
+			ft_printf("You lost the game. So long!\n");
+		}
+		i++;
 	}
-	if (data->enemy.row == data->player.row &&
-		data->enemy.col == data->player.col && !data->game_over)
-		defeat(data);
 }
 
 static void	animate_object(t_env_anim *obj)
@@ -68,12 +77,13 @@ int	game_loop(t_data *data)
 {
 	if (data->game_over)
 	{
-		close_game((void *)data);
+		handle_game_end(data);
 		return (0);
 	}
 	animate_object(&data->wall);
 	animate_enemy(data);
 	render_map(data);
 	display_moves(data);
+	display_collected(data);
 	return (0);
 }
