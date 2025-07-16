@@ -17,7 +17,7 @@ static void	validate_extension(t_data *data, char *filename)
 	while (*filename && *filename != '.')
 		filename++;
 	if (ft_strncmp(filename, ".ber", 4))
-		error_exit(data, "Error: Invalid map extension\n");
+		error_exit(data, "Error: Invalid file extension\n");
 }
 
 static char	**append_line(char **map, char *line, int i)
@@ -45,7 +45,7 @@ static char	**append_line(char **map, char *line, int i)
 	return (new_map);
 }
 
-void	parse_map(t_data *data, char *file)
+void	parse_map(t_data *data, char *filename)
 {
 	char	**tmp;
 	char	*line;
