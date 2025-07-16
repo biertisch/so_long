@@ -12,6 +12,14 @@
 
 #include "../include/so_long.h"
 
+static void	validate_extension(t_data *data, char *filename)
+{
+	while (*filename && *filename != '.')
+		filename++;
+	if (ft_strncmp(filename, ".ber", 4))
+		error_exit(data, "Error: Invalid map extension\n");
+}
+
 static char	**append_line(char **map, char *line, int i)
 {
 	char	**new_map;
@@ -44,6 +52,7 @@ void	parse_map(t_data *data, char *file)
 	int		fd;
 	int		i;	
 
+	validate_extension(data, file);
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		error_exit(data, "Error: Failed access to file\n");
