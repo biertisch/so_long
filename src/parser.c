@@ -52,8 +52,8 @@ void	parse_map(t_data *data, char *filename)
 	int		fd;
 	int		i;	
 
-	validate_extension(data, file);
-	fd = open(file, O_RDONLY);
+	validate_extension(data, filename);
+	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		error_exit(data, "Error: Failed access to file\n");
 	line = get_next_line(fd);
