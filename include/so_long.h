@@ -17,22 +17,52 @@
 # include "../libft/include/libft.h"
 # include <fcntl.h>
 
-# define TILE_SIZE 64
-# define ESC 65307
-# define Q_KEY 113
-# define W_KEY 119
-# define S_KEY 115
-# define A_KEY 97
-# define D_KEY 100
-# define UP_ARROW 65362
-# define DOWN_ARROW 65364
-# define LEFT_ARROW 65361
-# define RIGHT_ARROW 65363
-# define MAGIC_COLOR 0xFF00FF
-# define WALL_FRAMES 22
-# define PLAYER_FRAMES 9
-# define ENEMY_FRAMES 6
-# define CHAR_FRAMES 11
+# define TILE_SIZE		64
+# define DIRECTIONS		4
+# define WALL_FRAMES	22
+# define PLAYER_FRAMES	9
+# define ENEMY_FRAMES	6
+# define CHAR_FRAMES	11
+# define MAGIC_COLOR	0xFF00FF
+# define KEY_ESC		65307
+# define KEY_Q			113
+# define KEY_W			119
+# define KEY_S			115
+# define KEY_A			97
+# define KEY_D			100
+# define KEY_UP			65362
+# define KEY_DOWN		65364
+# define KEY_LEFT		65361
+# define KEY_RIGHT		65363
+
+typedef enum e_dir
+{
+	DIR_UP,
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT
+}	t_dir;
+
+typedef enum e_game_outcome
+{
+	RUNNING,
+	VICTORY,
+	DEFEAT
+}	t_game_outcome;
+
+typedef struct s_map
+{
+	char	**map;
+	int		width;
+	int		height;
+}			t_map;
+
+typedef struct s_win
+{
+	char	*ptr;
+	int		width;
+	int		height;
+}			t_win;
 
 typedef struct s_image
 {
@@ -54,7 +84,7 @@ typedef struct s_env_anim
 	int		tick_rate;
 }			t_env_anim;
 
-typedef struct s_ent_anim
+typedef struct s_ent
 {
 	t_image	**frames;
 	t_image	**collect_layer;
@@ -66,17 +96,13 @@ typedef struct s_ent_anim
 	int		current_dir;
 	int		frame_tick;
 	int		tick_rate;
-}			t_ent_anim;
+}			t_ent;
 
 typedef struct s_data
 {
-	char		**map;
-	int			map_width;
-	int			map_height;
+	t_map		map;
 	void		*mlx;
-	void		*win;
-	int			win_width;
-	int			win_height;
+	t_win		win;
 	int			collectibles;
 	int			collected;
 	int			unlock_exit;
@@ -84,19 +110,19 @@ typedef struct s_data
 	int			enemy_count;
 	int			game_over;
 	int			end_tick;
-	t_ent_anim	player;
-	t_ent_anim	*enemy;
+	t_image		background;
+	t_image		move_counter;
+	t_image		collect_counter;
+	t_image		closed_exit_msg;
+	t_image		victory_msg;
+	t_image		defeat_msg;
+	t_image		*chars;
 	t_env_anim	wall;
 	t_image		exit;
 	t_image		floor;
 	t_image		collect;
-	t_image		black;
-	t_image		move_counter;
-	t_image		collect_counter;
-	t_image		closed_exit;
-	t_image		victory;
-	t_image		defeat;
-	t_image		*chars;
+	t_ent		player;
+	t_ent		*enemy;
 }				t_data;
 
 //draw.c
@@ -108,12 +134,7 @@ void	error_exit(t_data *data, char *error_msg);
 int		close_game(void *param);
 
 //enemy.c
-int		move_enemy(t_data *data, t_ent_anim *enemy);
-
-//filename.c
-void	build_char_filename(char *dest, int idx);
-void	build_ent_filename(char *dest, char *base, int dir, int frame);
-void	build_env_filename(char *dest, char *base, int frame);
+int		move_enemy(t_data *data, t_ent *enemy);
 
 //flood_fill.c
 void	flood_fill(t_data *data, char **map, int row, int col);
@@ -126,10 +147,14 @@ void	free_arr(char **arr);
 //game_loop.c
 int		game_loop(t_data *data);
 
-//image.c
-void	load_wall_frames(t_data *data);
-void	load_player_frames(t_data *data);
-void	load_enemy_frames(t_data *data);
+//init_ent.c
+void	init_ent(t_data *data);
+
+//init_env.c
+void	init_env(t_data *data);
+
+//init_ui.c
+void	init_ui(t_data *data);
 
 //map_data.c
 void	init_map_data(t_data *data);
@@ -143,14 +168,11 @@ void	parse_map(t_data *data, char *file);
 
 //player.c
 int		key_handler(int keycode, void *param);
-void	update_frame(t_ent_anim *ent, int dir);
+void	update_ent_frame(t_ent *ent, int new_dir);
 
 //render.c
-void	render_map(t_data *data);
+void	render_map(t_data *data, char **map);
 int		render_counter(t_data *data, int n, int x);
-
-//text.c
-void	load_text(t_data *data);
 
 //validate.c
 void	validate_map(t_data *data);

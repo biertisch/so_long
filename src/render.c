@@ -27,92 +27,70 @@ int	render_counter(t_data *data, int n, int x)
 	}
 	while (--len >= 0)
 	{
-		mlx_put_image_to_window(data->mlx, data->win,
+		mlx_put_image_to_window(data->mlx, data->win.ptr,
 			data->chars[digits[len]].img, x, 0);
 		x += 16;
 	}
 	return (x);
 }
 
-static void	render_enemy(t_data *data, t_ent_anim *enemy, char c)
+static void	render_ent(t_data *data, t_ent *ent, char id, int extra_layer)
 {
-	int	dir;
-	int	frame;
 	int	x;
 	int	y;
 
-	dir = enemy->current_dir;
-	frame = enemy->current_frame;
-	x = enemy->col * TILE_SIZE;
-	y = enemy->row * TILE_SIZE + TILE_SIZE / 2;
-	if (c == 'E')
-		mlx_put_image_to_window(data->mlx, data->win,
-			enemy->exit_layer[dir][frame].img, x, y);
-	else if (c == 'C')
-		mlx_put_image_to_window(data->mlx, data->win,
-			enemy->collect_layer[dir][frame].img, x, y);
+	x = ent->col * TILE_SIZE;
+	y = ent->row * TILE_SIZE + TILE_SIZE / 2;
+	if (id == 'E')
+		mlx_put_image_to_window(data->mlx, data->win.ptr,
+			ent->exit_layer[ent->current_dir][ent->current_frame].img, x, y);
+	else if (id == 'C' && extra_layer)
+		mlx_put_image_to_window(data->mlx, data->win.ptr,
+			ent->collect_layer[ent->current_dir][ent->current_frame].img, x, y);
 	else
-		mlx_put_image_to_window(data->mlx, data->win,
-			enemy->frames[dir][frame].img, x, y);
+		mlx_put_image_to_window(data->mlx, data->win.ptr,
+			ent->frames[ent->current_dir][ent->current_frame].img, x, y);
 }
 
-static void	render_player(t_data *data, char c)
-{
-	int	dir;
-	int	frame;
-	int	x;
-	int	y;
-
-	dir = data->player.current_dir;
-	frame = data->player.current_frame;
-	x = data->player.col * TILE_SIZE;
-	y = data->player.row * TILE_SIZE + TILE_SIZE / 2;
-	if (c == 'E')
-		mlx_put_image_to_window(data->mlx, data->win,
-			data->player.exit_layer[dir][frame].img, x, y);
-	else
-		mlx_put_image_to_window(data->mlx, data->win,
-			data->player.frames[dir][frame].img, x, y);
-}
-
-static void	render_environment(t_data *data, char c, int i, int j)
+static void	render_env(t_data *data, char c, int i, int j)
 {
 	int	x;
 	int	y;
 
 	x = j * TILE_SIZE;
 	y = i * TILE_SIZE + TILE_SIZE / 2;
-	mlx_put_image_to_window(data->mlx, data->win, data->floor.img, x, y);
+	mlx_put_image_to_window(data->mlx, data->win.ptr, data->floor.img, x, y);
 	if (c == '1')
-		mlx_put_image_to_window(data->mlx, data->win,
+		mlx_put_image_to_window(data->mlx, data->win.ptr,
 			data->wall.frames[data->wall.current_frame].img, x, y);
 	else if (c == 'C')
-		mlx_put_image_to_window(data->mlx, data->win, data->collect.img, x, y);
+		mlx_put_image_to_window(data->mlx, data->win.ptr, data->collect.img, x,
+			y);
 	else if (c == 'E')
-		mlx_put_image_to_window(data->mlx, data->win, data->exit.img, x, y);
+		mlx_put_image_to_window(data->mlx, data->win.ptr, data->exit.img, x, y);
 }
 
-void	render_map(t_data *data)
+void	render_map(t_data *data, char **map)
 {
 	int	i;
 	int	j;
 	int	k;
 
 	i = 0;
-	while (data->map[i])
+	while (map[i])
 	{
 		j = 0;
-		while (data->map[i][j])
+		while (map[i][j])
 		{
-			render_environment(data, data->map[i][j], i, j);
+			render_env(data, map[i][j], i, j);
 			if (data->player.row == i && data->player.col == j)
-				render_player(data, data->map[i][j]);
+				render_ent(data, &data->player, map[i][j], 0);
 			k = 0;
 			while (k < data->enemy_count)
 			{
 				if (i != 0 && j != 0 && data->enemy[k].row == i
 					&& data->enemy[k].col == j)
-					render_enemy(data, &data->enemy[k], data->map[i][j]);
+					render_ent(data, &data->enemy[k], map[i][j], 1);
 				k++;
 			}
 			j++;

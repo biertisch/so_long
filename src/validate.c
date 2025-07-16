@@ -16,7 +16,7 @@ static int	is_reachable(t_data *data)
 {
 	char	**tmp;
 
-	tmp = duplicate_map(data->map, data->map_height);
+	tmp = duplicate_map(data->map.map, data->map.height);
 	if (!tmp)
 		error_exit(data, "Error: Memory allocation failed\n");
 	flood_fill(data, tmp, data->player.row, data->player.col);
@@ -100,18 +100,18 @@ static int	is_rectangular(char **map)
 
 void	validate_map(t_data *data)
 {
-	if (!data->map || !*data->map)
+	if (!data->map.map || !*data->map.map)
 		error_exit(data, "Error: Invalid map (empty)\n");
-	if (!is_rectangular(data->map))
+	if (!is_rectangular(data->map.map))
 		error_exit(data, "Error: Invalid map (not rectangular)\n");
-	if (!is_enclosed(data->map))
+	if (!is_enclosed(data->map.map))
 		error_exit(data, "Error: Invalid map (not enclosed)\n");
-	if (!has_valid_elements(data->map))
+	if (!has_valid_elements(data->map.map))
 		error_exit(data, "Error: Invalid map (invalid elements)\n");
 	init_map_data(data);
 	if (!is_reachable(data))
 		error_exit(data, "Error: Invalid map (unreachable exit/collectible)\n");
-	if (data->map_width * TILE_SIZE > 1920
-		|| (data->map_height + 1) * TILE_SIZE > 1080)
+	if (data->map.width * TILE_SIZE > 1920
+		|| (data->map.height + 1) * TILE_SIZE > 1080)
 		error_exit(data, "Error: Invalid map (too big)\n");
 }

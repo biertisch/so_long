@@ -14,7 +14,7 @@
 
 void	flood_fill(t_data *data, char **map, int row, int col)
 {
-	if (row < 0 || row >= data->map_height || col < 0 || col >= data->map_width
+	if (row < 0 || row >= data->map.height || col < 0 || col >= data->map.width
 		|| map[row][col] == '1' || map[row][col] == 'F')
 		return ;
 	if (map[row][col] == 'E')
@@ -33,7 +33,7 @@ char	**duplicate_map(char **map, int rows)
 	char	**tmp;
 	int		i;
 
-	tmp = ft_calloc(rows + 1, sizeof(char *));
+	tmp = ft_calloc(sizeof(char *), rows + 1);
 	if (!tmp)
 		return (NULL);
 	i = 0;

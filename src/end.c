@@ -14,14 +14,14 @@
 
 void	handle_game_end(t_data *data)
 {
-	if (data->end_tick == 0)
-		render_map(data);
-	if (data->game_over == 1 && data->end_tick == 0)
-		mlx_put_image_to_window(data->mlx, data->win, data->victory.img,
-			data->win_width / 2 - 190, data->win_height / 2 - 105);
-	else if (data->game_over == 2 && data->end_tick == 0)
-		mlx_put_image_to_window(data->mlx, data->win, data->defeat.img,
-			data->win_width / 2 - 190, data->win_height / 2 - 105);
+	if (!data->end_tick)
+		render_map(data, data->map.map);
+	if (data->game_over == VICTORY && !data->end_tick)
+		mlx_put_image_to_window(data->mlx, data->win.ptr, data->victory_msg.img,
+			data->win.width / 2 - 190, data->win.height / 2 - 105);
+	else if (data->game_over == DEFEAT && !data->end_tick)
+		mlx_put_image_to_window(data->mlx, data->win.ptr, data->defeat_msg.img,
+			data->win.width / 2 - 190, data->win.height / 2 - 105);
 	data->end_tick++;
 	if (data->end_tick >= 25000)
 		close_game((void *)data);

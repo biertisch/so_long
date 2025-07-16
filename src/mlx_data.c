@@ -67,20 +67,13 @@ void	init_mlx_data(t_data *data)
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		error_exit(data, "Error: Failed to initiate mlx connection\n");
-	data->win_width = data->map_width * TILE_SIZE;
-	data->win_height = data->map_height * TILE_SIZE + TILE_SIZE;
-	data->win = mlx_new_window(
-			data->mlx,
-			data->win_width,
-			data->win_height,
+	data->win.width = data->map.width * TILE_SIZE;
+	data->win.height = data->map.height * TILE_SIZE + TILE_SIZE;
+	data->win.ptr = mlx_new_window(data->mlx, data->win.width, data->win.height,
 			"So Long");
-	if (!data->win)
+	if (!data->win.ptr)
 		error_exit(data, "Error: Failed to create window\n");
-	load_image(data, &data->floor, NULL, "textures/floor.xpm");
-	load_image(data, &data->collect, NULL, "textures/collectible.xpm");
-	load_image(data, &data->exit, NULL, "textures/exit.xpm");
-	load_wall_frames(data);
-	load_player_frames(data);
-	load_enemy_frames(data);
-	load_text(data);
+	init_env(data);
+	init_ent(data);
+	init_ui(data);
 }

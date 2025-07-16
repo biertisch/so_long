@@ -22,9 +22,9 @@ int	main(int argc, char **argv)
 	parse_map(&data, argv[1]);
 	validate_map(&data);
 	init_mlx_data(&data);
-	render_map(&data);
-	mlx_hook(data.win, 2, 1L << 0, key_handler, &data);
-	mlx_hook(data.win, 17, 0, close_game, &data);
+	render_map(&data, data.map.map);
+	mlx_hook(data.win.ptr, 2, 1L << 0, key_handler, &data);
+	mlx_hook(data.win.ptr, 17, 0, close_game, &data);
 	mlx_loop_hook(data.mlx, game_loop, &data);
 	mlx_loop(data.mlx);
 }

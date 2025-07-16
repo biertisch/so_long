@@ -12,17 +12,17 @@ SRC = $(addprefix $(SRC_DIR),\
 		game_loop.c\
 		end.c\
 		enemy.c\
-		filename.c\
 		flood_fill.c\
 		free.c\
-		image.c\
+		init_ent.c\
+		init_env.c\
+		init_ui.c\
 		main.c\
 		map_data.c\
 		mlx_data.c\
 		parser.c\
 		player.c\
 		render.c\
-		text.c\
 		validate.c)
 
 OBJ_DIR = obj/

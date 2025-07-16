@@ -12,18 +12,6 @@
 
 #include "../include/so_long.h"
 
-void	free_arr(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-}
-
 static void	free_frames(t_data *data, t_image *frames, int frame_count)
 {
 	int	i;
@@ -40,7 +28,7 @@ static void	free_frames(t_data *data, t_image *frames, int frame_count)
 	free(frames);
 }
 
-static void	free_env(t_data *data)
+static void	free_env_and_ui(t_data *data)
 {
 	if (data->floor.img)
 		mlx_destroy_image(data->mlx, data->floor.img);
@@ -48,34 +36,34 @@ static void	free_env(t_data *data)
 		mlx_destroy_image(data->mlx, data->collect.img);
 	if (data->exit.img)
 		mlx_destroy_image(data->mlx, data->exit.img);
-	if (data->black.img)
-		mlx_destroy_image(data->mlx, data->black.img);
+	if (data->background.img)
+		mlx_destroy_image(data->mlx, data->background.img);
 	if (data->move_counter.img)
 		mlx_destroy_image(data->mlx, data->move_counter.img);
 	if (data->collect_counter.img)
 		mlx_destroy_image(data->mlx, data->collect_counter.img);
-	if (data->closed_exit.img)
-		mlx_destroy_image(data->mlx, data->closed_exit.img);
-	if (data->victory.img)
-		mlx_destroy_image(data->mlx, data->victory.img);
-	if (data->defeat.img)
-		mlx_destroy_image(data->mlx, data->defeat.img);
+	if (data->closed_exit_msg.img)
+		mlx_destroy_image(data->mlx, data->closed_exit_msg.img);
+	if (data->victory_msg.img)
+		mlx_destroy_image(data->mlx, data->victory_msg.img);
+	if (data->defeat_msg.img)
+		mlx_destroy_image(data->mlx, data->defeat_msg.img);
 	free_frames(data, data->wall.frames, data->wall.frame_count);
 	free_frames(data, data->chars, CHAR_FRAMES);
 }
 
-static void	free_ent(t_data *data, t_ent_anim *ent)
+static void	free_ent(t_data *data, t_ent *ent)
 {
 	int	i;
 
 	i = 0;
-	while (i < 4)
+	while (i < DIRECTIONS)
 	{
-		if (ent->frames)
+		if (ent->frames && ent->frames[i])
 			free_frames(data, ent->frames[i], ent->frame_count);
-		if (ent->collect_layer)
+		if (ent->collect_layer && ent->collect_layer[i])
 			free_frames(data, ent->collect_layer[i], ent->frame_count);
-		if (ent->exit_layer)
+		if (ent->exit_layer && ent->exit_layer[i])
 			free_frames(data, ent->exit_layer[i], ent->frame_count);
 		i++;
 	}
@@ -87,11 +75,23 @@ static void	free_ent(t_data *data, t_ent_anim *ent)
 		free(ent->exit_layer);
 }
 
+void	free_arr(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
 void	free_data(t_data *data)
 {
 	int	i;
 
-	free_arr(data->map);
+	free_arr(data->map.map);
 	free_ent(data, &data->player);
 	i = 0;
 	while (i < data->enemy_count)
@@ -100,9 +100,9 @@ void	free_data(t_data *data)
 		i++;
 	}
 	free(data->enemy);
-	free_env(data);
-	if (data->win)
-		mlx_destroy_window(data->mlx, data->win);
+	free_env_and_ui(data);
+	if (data->win.ptr)
+		mlx_destroy_window(data->mlx, data->win.ptr);
 	if (data->mlx)
 	{
 		mlx_destroy_display(data->mlx);

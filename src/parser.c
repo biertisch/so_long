@@ -17,7 +17,7 @@ static char	**append_line(char **map, char *line, int i)
 	char	**new_map;
 	int		j;
 
-	new_map = ft_calloc((i + 2), sizeof(char *));
+	new_map = ft_calloc(sizeof(char *), i + 2);
 	if (!new_map)
 		return (NULL);
 	j = 0;
@@ -51,11 +51,11 @@ void	parse_map(t_data *data, char *file)
 	i = 0;
 	while (line)
 	{
-		tmp = append_line(data->map, line, i);
+		tmp = append_line(data->map.map, line, i);
 		if (!tmp)
 			error_exit(data, "Error: Failed memory allocation\n");
 		free(line);
-		data->map = tmp;
+		data->map.map = tmp;
 		line = get_next_line(fd);
 		i++;
 	}

@@ -12,20 +12,68 @@
 
 #include "../include/so_long.h"
 
-static void	count_elements(t_data *data)
+static void	set_enemy_position(char **map, t_ent *enemy, int enemy_count)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 0;
+	k = 0;
+	while (map[i] && k < enemy_count)
+	{
+		j = 0;
+		while (map[i][j] && k < enemy_count)
+		{
+			if (map[i][j] == 'M')
+			{
+				enemy[k].row = i;
+				enemy[k].col = j;
+				k++;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static void	set_player_position(char **map, t_ent *player)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (data->map[i])
+	while (map[i])
 	{
 		j = 0;
-		while (data->map[i][j])
+		while (map[i][j])
 		{
-			if (data->map[i][j] == 'C')
+			if (map[i][j] == 'P')
+			{
+				player->row = i;
+				player->col = j;
+				return ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static void	count_elements(t_data *data, char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'C')
 				data->collectibles++;
-			else if (data->map[i][j] == 'M')
+			else if (map[i][j] == 'M')
 				data->enemy_count++;
 			j++;
 		}
@@ -33,53 +81,26 @@ static void	count_elements(t_data *data)
 	}
 }
 
-static void	set_entities_position(t_data *data)
-{
-	int	i;
-	int	j;
-	int	k;
-
-	k = 0;
-	i = -1;
-	while (data->map[++i])
-	{
-		j = -1;
-		while (data->map[i][++j])
-		{
-			if (data->map[i][j] == 'P')
-			{
-				data->player.row = i;
-				data->player.col = j;
-			}
-			else if (data->map[i][j] == 'M')
-			{
-				data->enemy[k].row = i;
-				data->enemy[k].col = j;
-				k++;
-			}
-		}
-	}
-}
-
-static void	set_map_size(t_data *data)
+static void	set_map_size(t_map *map)
 {
 	int	i;
 
 	i = 0;
-	data->map_width = ft_strlen(data->map[i]);
-	while (data->map[i++])
-		data->map_height++;
+	map->width = ft_strlen(map->map[i]);
+	while (map->map[i++])
+		map->height++;
 }
 
 void	init_map_data(t_data *data)
 {
-	set_map_size(data);
-	count_elements(data);
+	set_map_size(&data->map);
+	count_elements(data, data->map.map);
 	if (data->enemy_count)
 	{
-		data->enemy = ft_calloc(sizeof(t_ent_anim), data->enemy_count);
+		data->enemy = ft_calloc(sizeof(t_ent), data->enemy_count);
 		if (!data->enemy)
 			error_exit(data, "Error: Memory allocation failed\n");
 	}
-	set_entities_position(data);
+	set_player_position(data->map.map, &data->player);
+	set_enemy_position(data->map.map, data->enemy, data->enemy_count);
 }

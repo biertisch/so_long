@@ -14,14 +14,14 @@
 
 static int	can_move(t_data *data, int new_row, int new_col)
 {
-	if (new_row > 0 && new_row < data->map_height
-		&& new_col > 0 && new_col < data->map_width
-		&& data->map[new_row][new_col] != '1')
+	if (new_row > 0 && new_row < data->map.height
+		&& new_col > 0 && new_col < data->map.width
+		&& data->map.map[new_row][new_col] != '1')
 		return (1);
 	return (0);
 }
 
-static int	move_horizontally(t_data *data, t_ent_anim *enemy)
+static int	move_horizontally(t_data *data, t_ent *enemy)
 {
 	int	offset;
 	int	new_col;
@@ -38,12 +38,12 @@ static int	move_horizontally(t_data *data, t_ent_anim *enemy)
 	}
 	enemy->col = new_col;
 	if (offset == -1)
-		return (2);
+		return (DIR_LEFT);
 	else
-		return (3);
+		return (DIR_RIGHT);
 }
 
-static int	move_vertically(t_data *data, t_ent_anim *enemy)
+static int	move_vertically(t_data *data, t_ent *enemy)
 {
 	int	offset;
 	int	new_row;
@@ -60,16 +60,16 @@ static int	move_vertically(t_data *data, t_ent_anim *enemy)
 	}
 	enemy->row = new_row;
 	if (offset == -1)
-		return (0);
+		return (DIR_UP);
 	else
-		return (1);
+		return (DIR_DOWN);
 }
 
-int	move_enemy(t_data *data, t_ent_anim *enemy)
+int	move_enemy(t_data *data, t_ent *enemy)
 {
 	int	new_dir;
 
-	if (enemy->current_dir > 1)
+	if (enemy->current_dir == DIR_LEFT || enemy->current_dir == DIR_RIGHT)
 	{
 		if (can_move(data, enemy->row, enemy->col - 1)
 			|| can_move(data, enemy->row, enemy->col + 1))
