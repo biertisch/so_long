@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 15:02:09 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/05 15:02:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 22:28:36 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../mlx/mlx.h"
 # include "../libft/include/libft.h"
 # include <fcntl.h>
+# include <sys/time.h>
 
 # define TILE_SIZE		64
 # define DIRECTIONS		4
@@ -80,8 +81,8 @@ typedef struct s_env_anim
 	t_image	*frames;
 	int		frame_count;
 	int		current_frame;
-	int		frame_tick;
-	int		tick_rate;
+	long	last_move;
+	int		move_interval_ms;
 }			t_env_anim;
 
 typedef struct s_ent
@@ -94,8 +95,8 @@ typedef struct s_ent
 	int		frame_count;
 	int		current_frame;
 	int		current_dir;
-	int		frame_tick;
-	int		tick_rate;
+	long	last_move;
+	int		move_interval_ms;
 }			t_ent;
 
 typedef struct s_data
@@ -109,7 +110,7 @@ typedef struct s_data
 	int			moves;
 	int			enemy_count;
 	int			game_over;
-	int			end_tick;
+	long		end_time;
 	t_image		background;
 	t_image		move_counter;
 	t_image		collect_counter;
@@ -142,7 +143,6 @@ char	**duplicate_map(char **map, int rows);
 
 //free.c
 void	free_data(t_data *data);
-void	free_arr(char **arr);
 
 //game_loop.c
 int		game_loop(t_data *data);
@@ -173,6 +173,9 @@ void	update_ent_frame(t_ent *ent, int new_dir);
 //render.c
 void	render_map(t_data *data, char **map);
 int		render_counter(t_data *data, int n, int x);
+
+//time.c
+long	get_time_ms(void);
 
 //validate.c
 void	validate_map(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:57:09 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/07 14:57:09 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 19:48:26 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**duplicate_map(char **map, int rows)
 		tmp[i] = ft_strdup(map[i]);
 		if (!tmp[i])
 		{
-			free_arr(tmp);
+			free_string_array(tmp);
 			return (NULL);
 		}
 		i++;

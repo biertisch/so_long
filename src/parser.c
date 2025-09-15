@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 10:07:17 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/07 10:07:17 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/09 22:39:22 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	**append_line(char **map, char *line, int i)
 	new_map[i] = ft_strtrim(line, "\r\n");
 	if (!new_map[i])
 	{
-		free_arr(new_map);
+		free_string_array(new_map);
 		return (NULL);
 	}
 	free (map);
@@ -50,7 +50,7 @@ void	parse_map(t_data *data, char *filename)
 	char	**tmp;
 	char	*line;
 	int		fd;
-	int		i;	
+	int		i;
 
 	validate_extension(data, filename);
 	fd = open(filename, O_RDONLY);

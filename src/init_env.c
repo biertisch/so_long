@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 09:55:47 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/16 09:55:47 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 22:33:46 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static void	load_wall_frames(t_data *data, t_env_anim *wall)
 		i++;
 	}
 	wall->frame_count = WALL_FRAMES;
-	wall->tick_rate = 100;
+	wall->last_move = get_time_ms();
+	wall->move_interval_ms = 100;
 }
 
 void	init_env(t_data *data)

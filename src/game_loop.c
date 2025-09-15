@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 12:31:54 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/11 12:31:54 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 22:31:50 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,19 @@ static void	display_moves(t_data *data)
 
 static void	animate_enemy(t_data *data)
 {
-	int	new_dir;
-	int	i;
+	int		new_dir;
+	int		i;
+	long	now;
 
 	i = 0;
 	while (i < data->enemy_count)
 	{
-		data->enemy[i].frame_tick++;
-		if (data->enemy[i].frame_tick >= data->enemy[i].tick_rate)
+		now = get_time_ms();
+		if (now - data->enemy[i].last_move >= data->enemy[i].move_interval_ms)
 		{
 			new_dir = move_enemy(data, &data->enemy[i]);
 			update_ent_frame(&data->enemy[i], new_dir);
-			data->enemy[i].frame_tick = 0;
+			data->enemy[i].last_move = now;
 		}
 		if (data->enemy[i].row == data->player.row
 			&& data->enemy[i].col == data->player.col && !data->game_over)
@@ -65,11 +66,13 @@ static void	animate_enemy(t_data *data)
 
 static void	animate_object(t_env_anim *obj)
 {
-	obj->frame_tick++;
-	if (obj->frame_tick >= obj->tick_rate)
+	long	now;
+
+	now = get_time_ms();
+	if (now - obj->last_move >= obj->move_interval_ms)
 	{
 		obj->current_frame = (obj->current_frame + 1) % obj->frame_count;
-		obj->frame_tick = 0;
+		obj->last_move = now;
 	}
 }
 

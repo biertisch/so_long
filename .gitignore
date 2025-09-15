@@ -1,3 +1,7 @@
-.vscode/
+.vscode
 textures/png/
-mlx/
+libft
+obj
+*.pdf
+*.mp4
+so_long

@@ -14,8 +14,8 @@ LIBFT_URL	=	https://github.com/biertisch/libft.git
 LIBFT		=	$(LIBFT_DIR)libft.a
 MLX			=	$(MLX_DIR)libmlx.a
 
-SRC         =	$(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
-OBJ         =	$(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(SRC_FILES)))
+SRC         =	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
+OBJ         =	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
 
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra -g -I$(INC_DIR) -I$(LIBFT_DIR)$(INC_DIR) -I$(MLX_DIR)

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 15:18:49 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/07 15:18:49 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/09 22:37:59 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,23 +75,11 @@ static void	free_ent(t_data *data, t_ent *ent)
 		free(ent->exit_layer);
 }
 
-void	free_arr(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-}
-
 void	free_data(t_data *data)
 {
 	int	i;
 
-	free_arr(data->map.map);
+	free_string_array(data->map.map);
 	free_ent(data, &data->player);
 	i = 0;
 	while (i < data->enemy_count)

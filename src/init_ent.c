@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 10:09:38 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/16 10:09:38 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 22:40:53 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ void	init_ent(t_data *data)
 	{
 		data->enemy[i].frame_count = ENEMY_FRAMES;
 		data->enemy[i].current_dir = DIR_LEFT;
-		data->enemy[i].tick_rate = 200;
+		data->enemy[i].last_move = get_time_ms();
+		data->enemy[i].move_interval_ms = 250;
 		allocate_ent_frames(data, &data->enemy[i], 1);
 		load_ent_frames(data, &data->enemy[i], "enemy", 1);
 		i++;

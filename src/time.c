@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 16:17:38 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/06/03 19:21:49 by beatde-a         ###   ########.fr       */
+/*   Created: 2025/07/24 21:20:24 by beatde-a          #+#    #+#             */
+/*   Updated: 2025/09/15 21:18:18 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "../include/so_long.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+long	get_time_ms(void)
 {
-	if (!lst || !*lst || !del)
-		return ;
-	while ((*lst)->next)
-		ft_lstclear((&(*lst)->next), del);
-	ft_lstdelone(*lst, del);
-	*lst = NULL;
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) != 0)
+		return (-1);
+	return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
 }

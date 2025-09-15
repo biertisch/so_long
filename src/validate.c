@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 11:09:19 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/07/07 11:09:19 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/15 19:48:51 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	is_reachable(t_data *data)
 	if (!tmp)
 		error_exit(data, "Error: Memory allocation failed\n");
 	flood_fill(data, tmp, data->player.row, data->player.col);
-	free_arr(tmp);
+	free_string_array(tmp);
 	if (data->unlock_exit != 1 || data->collected != data->collectibles)
 		return (0);
 	data->unlock_exit = 0;
