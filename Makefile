@@ -26,33 +26,49 @@ all: $(NAME)
 	@cat banner.txt
 
 $(NAME): $(LIBFT) $(MLX) $(OBJ_DIR) $(OBJ)
-	$(CC) $(OBJ) $(LFLAGS) -o $@
+	@echo "Linking executable..."
+	@$(CC) $(OBJ) $(LFLAGS) -o $@
 
 $(LIBFT): $(LIBFT_DIR)
-	$(MAKE) -C $(LIBFT_DIR) extra
+	@echo "Building libft..."
+	@$(MAKE) -C $(LIBFT_DIR) extra > /dev/null
 
 $(LIBFT_DIR):
-	git clone $(LIBFT_URL) $(LIBFT_DIR)
+	@echo "Cloning libft..."
+	@git clone --quiet $(LIBFT_URL) $(LIBFT_DIR)
 
 $(MLX):
-	$(MAKE) -C $(MLX_DIR)
+	@echo "Building minilibx..."
+	@$(MAKE) -C $(MLX_DIR) > /dev/null
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c compile_message
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+compile_message:
+	@echo "Compiling object files..."
 
 clean:
-	$(RM) $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	$(MAKE) -C $(MLX_DIR) clean
+	@echo "Removing object files..."
+	@$(RM) $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean > /dev/null
+	@$(MAKE) -C $(MLX_DIR) clean > /dev/null
 
 fclean: clean
-	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	$(RM) $(LIBFT_DIR)
+	@echo "Removing executable and libraries..."
+	@$(RM) $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean > /dev/null
+	@$(RM) $(LIBFT_DIR)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+play: $(NAME)
+	@cat banner.txt
+	@./play.sh
+
+test: $(NAME)
+	@./maps/invalid/test_parser.sh
+
+.PHONY: all clean fclean re play test

@@ -6,7 +6,7 @@
 /*   By: beatde-a <beatde-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 10:07:17 by beatde-a          #+#    #+#             */
-/*   Updated: 2025/09/09 22:39:22 by beatde-a         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:32:38 by beatde-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	validate_extension(t_data *data, char *filename)
 {
+	while (*filename == '.')
+		filename++;
 	while (*filename && *filename != '.')
 		filename++;
 	if (ft_strncmp(filename, ".ber", 4))
