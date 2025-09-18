@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MAP_DIR="maps/"
 PROG="./so_long"
+MAP_DIR="maps/"
 TEMP_OUTPUT="/tmp/so_long_output.txt"
 i=0
 

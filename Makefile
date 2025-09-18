@@ -22,14 +22,16 @@ CFLAGS		=	-Wall -Werror -Wextra -g -I$(INC_DIR) -I$(LIBFT_DIR)$(INC_DIR) -I$(MLX
 LFLAGS		=	-L$(LIBFT_DIR) -lft -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
 RM			=	rm -rf
 
+SENTINEL	=	$(OBJ_DIR).compiled
+
 all: $(NAME)
 	@cat banner.txt
 
-$(NAME): $(LIBFT) $(MLX) $(OBJ_DIR) $(OBJ)
+$(NAME): $(LIBFT) $(MLX) $(OBJ)
 	@echo "Linking executable..."
 	@$(CC) $(OBJ) $(LFLAGS) -o $@
 
-$(LIBFT): $(LIBFT_DIR)
+$(LIBFT): | $(LIBFT_DIR)
 	@echo "Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR) extra > /dev/null
 
@@ -41,14 +43,17 @@ $(MLX):
 	@echo "Building minilibx..."
 	@$(MAKE) -C $(MLX_DIR) > /dev/null
 
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c compile_message
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ): $(SENTINEL)
 
-compile_message:
+$(SENTINEL):
 	@echo "Compiling object files..."
+	@touch $@
 
 clean:
 	@echo "Removing object files..."

@@ -13,6 +13,7 @@ fi
 echo "------------------------------------"
 echo "Testing with no map"
 
+echo "Programme output:"
 valgrind --leak-check=full --error-exitcode=42 --quiet "$PROG"
 status=$?
 if [ $status -eq 0 ]; then
@@ -23,12 +24,12 @@ else
 	echo "Program exited with error code $status (likely due to invalid map)"
 fi
 
-# Loop through all files in MAP_DIR
+# Test with each invalid map
 for map in $MAP_DIR/*; do
 	echo "------------------------------------"
 	echo "Testing map: $map"
 
-	# Run with valgrind
+	echo -n "Programme output: "
 	valgrind --leak-check=full --error-exitcode=42 --quiet "$PROG" "$map"
 
 	status=$?
@@ -38,7 +39,7 @@ for map in $MAP_DIR/*; do
 	elif [ $status -eq 42 ]; then
 		echo "Memory leak detected!"
 	else
-		echo "Program exited with error code $status (likely due to invalid map)"
+		echo "Programme exited with error code $status (likely due to invalid map)"
 	fi
 done
 
