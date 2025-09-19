@@ -26,7 +26,7 @@ The project is part of the 42 curriculum and introduces students to the fundamen
 ### Game
 
 #### Objective
-Collect all mushrooms and reach the exit without getting caught by the mushroom monsters.
+Collect all mushrooms and reach the exit without getting caught by the enemies.
 
 #### Controls
 
