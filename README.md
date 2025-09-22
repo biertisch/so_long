@@ -16,9 +16,9 @@ The project is part of the 42 curriculum and introduces students to the fundamen
 * **Custom and customizable maps**.
 * **Map validation and parser** using **flood-fill algorithm**.
 * **Graphics**: Smooth rendering with **Minilibx**, a simple X-Window (X11R6) API in C.
-* **Games stats**: on-screen move counter and collectibles counter.
-* **Sprite animation**: animated walls and enemies.
-* **Enemy patrols**: animated mushroom monsters seeking to avenge their lost brethren.
+* **Games stats (bonus)**: on-screen move counter and collectibles counter.
+* **Sprite animation (bonus)**: animated walls and enemies.
+* **Enemy patrols (bonus)**: animated mushroom monsters seeking to avenge their lost brethren.
 * **Parser tester (extra)**: a set of invalid maps and a simple shell script to test the programme's parser.
 * **Play mode (extra)**: a simple shell script which runs each valid map in a sequence of 5 levels.
 
