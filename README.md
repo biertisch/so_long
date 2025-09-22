@@ -19,8 +19,8 @@ The project is part of the 42 curriculum and introduces students to the fundamen
 * **Games stats**: on-screen move counter and collectibles counter.
 * **Sprite animation**: animated walls and enemies.
 * **Enemy patrols**: animated mushroom monsters seeking to avenge their lost brethren.
-* **Parser tester (EXTRA)**: a set of invalid maps and a simple shell script to test the programme's parser.
-* **Play mode (EXTRA)**: a simple shell script which runs each valid map in a sequence of 5 levels.
+* **Parser tester (extra)**: a set of invalid maps and a simple shell script to test the programme's parser.
+* **Play mode (extra)**: a simple shell script which runs each valid map in a sequence of 5 levels.
 
 ---
 ### Game
