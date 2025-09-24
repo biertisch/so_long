@@ -15,7 +15,7 @@ The project is part of the 42 curriculum and introduces students to the fundamen
 
 * **Custom and customizable maps**.
 * **Map validation and parser** using **flood-fill algorithm**.
-* **Graphics**: Smooth rendering with **Minilibx**, a simple X-Window (X11R6) API in C.
+* **Graphics**: Smooth rendering with **MinilibX**, a simple X-Window (X11R6) API in C.
 * **Games stats (bonus)**: on-screen move counter and collectibles counter.
 * **Sprite animation (bonus)**: animated walls and enemies.
 * **Enemy patrols (bonus)**: animated mushroom monsters seeking to avenge their lost brethren.
@@ -70,7 +70,7 @@ Collect all mushrooms and reach the exit without getting caught by the enemies.
 * Linux with X11
 * GCC
 * make
-* Minilibx (included)
+* MinilibX (included)
 
 ```
 git clone https://github.com/biertisch/so_long.git
